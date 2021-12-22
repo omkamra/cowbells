@@ -589,10 +589,10 @@
 ;; patterns above to ensure that the bass always starts at the
 ;; beginning of the bar.
 
-;; Tip: the project configuration also has `:snap` key. If you store a
-;; snap value there, all patterns you play will automatically inherit
-;; that snap value as their default (but you can still override it
-;; inside the pattern if necessary.)
+;; Tip: the project configuration also has a `:snap` key. If you store
+;; a snap value there, all patterns you play will automatically
+;; inherit that snap value as their default (but you can still
+;; override it inside the pattern if necessary.)
 
 ;; -[ THE TRANSCRIPTION LANGUAGE ]------------------------------------
 
