@@ -73,10 +73,9 @@
                         (def ~~'pattern-name
                           (sequencer/compile-pattern-expr
                            [:bind
-                            (merge (:bindings ~'~project-name)
-                                   {:target (-> ~'~project-name
-                                                :targets
-                                                ~'~default-alias)})
+                            {:target (-> ~'~project-name
+                                         :targets
+                                         ~'~default-alias)}
                             [:seq ~@~'body]]))
                         ~@(when-not ~'looping?
                             (list `(~'~'play ~~'pattern-name)))
@@ -90,10 +89,9 @@
                         (def ~~'pattern-name
                           (sequencer/compile-pattern-expr
                            [:bind
-                            (merge (:bindings ~'~project-name)
-                                   {:target (-> ~'~project-name
-                                                :targets
-                                                ~'~default-alias)})
+                            {:target (-> ~'~project-name
+                                         :targets
+                                         ~'~default-alias)}
                             [:seq ~@~'body [:play (var ~~'pattern-name)]]]))
                         (when-not @(:silent? ~'~project-name)
                           (alter-meta! (var ~~'pattern-name) assoc ::looping? true))
