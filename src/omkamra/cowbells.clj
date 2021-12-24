@@ -67,7 +67,8 @@
                  (defmacro ~'defp
                    ~'[pattern-name & body]
                    (let [~'v (resolve ~'pattern-name)
-                         ~'looping? (::looping? (meta ~'v))
+                         ~'looping? (and (:playing (sequencer/status (:sequencer ~project-name)))
+                                         (::looping? (meta ~'v)))
                          ~'result (if ~'v :updated :defined)]
                      `(do
                         (def ~~'pattern-name
@@ -83,7 +84,8 @@
                  (defmacro ~'defp<
                    ~'[pattern-name & body]
                    (let [~'v (resolve ~'pattern-name)
-                         ~'looping? (::looping? (meta ~'v))
+                         ~'looping? (and (:playing (sequencer/status (:sequencer ~project-name)))
+                                         (::looping? (meta ~'v)))
                          ~'result (if ~'v :updated :looping)]
                      `(do
                         (def ~~'pattern-name
