@@ -516,10 +516,39 @@
 
 ;; The reason it doesn't work without vars is that in this case the
 ;; Clojure compiler inlines the current values of `drums` and `hihats`
-;; when it evaluates the `drums&hihats` pattern. If we use vars, then
-;; this "inlining" is postponed to the time when the pattern gets
-;; built. And as `defp<` rebuilds the pattern after every iteration,
-;; changes in referenced var bindings will be picked up.
+;; immediately when it evaluates the `drums&hihats` pattern. If we use
+;; vars, then this "inlining" is postponed to the time when the
+;; pattern gets built. And as `defp<` repeatedly rebuilds the pattern
+;; after every iteration, changes in referenced var bindings are
+;; automatically picked up.
+
+;; Note that the pattern form `#'v` is shorthand for the pattern
+;; expression `[:var #'v]`. This pattern expression has another nice
+;; feature: if the resolved var happens to be a function (but not a
+;; pattern transformer function), the compiler applies this function
+;; to any extra arguments inside the `:var` form (following the var
+;; reference) and compiles the resulting value into a pattern
+;; transformer.
+
+;; This feature can be used to implement parameterized pattern
+;; generators which can be also updated dynamically while they are
+;; used by other patterns:
+
+(defn generate-arp
+  [start-degree notes]
+  (for [i (range notes)]
+    [:degree (+ start-degree (* i 2))]))
+
+(defp< arp-machine
+  [:bind {:step 1/3
+          :scale :minor
+          :channel 114
+          :vel 70}
+   [:program 114]
+   [:var #'generate-arp 0 3]
+   [:var #'generate-arp 2 5]
+   [:var #'generate-arp -3 3]
+   [:var #'generate-arp -7 5]])
 
 ;; -[ SNAPPING TO THE GRID]-------------------------------------------
 
