@@ -687,7 +687,7 @@
 
 ;; `(...)` translates to a `:seq` expression (which may be optimized away)
 
-;; Note that `~./2` is translated to "multiply the current value
+;; Note that `./2` is translated to "multiply the current value
 ;; of :step by 1/2", instead of simply setting it to the absolute
 ;; value 2. The fact that this is relative becomes very useful when we
 ;; want to speed up or slow down entire parts of a piece by
