@@ -437,8 +437,7 @@
 ;; implement live loops. Consider the following example:
 
 (def my-little-loop
-  [:bind {:target ::default
-          :scale :major}
+  [:bind {:scale :major}
    [:mix1
     [:bind {:channel 9}
      (repeat 4 [:note 36])]
@@ -475,7 +474,7 @@
   [:bind {:channel 9}
    (repeat 4 [:note 36])])
 
-;; The `defp` form is like a `def` followed by `play`   
+;; The `defp` form is like a `def` followed by `play`.
 
 ;; If you want to loop the pattern, change the `defp` to `defp<`:
 
