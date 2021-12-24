@@ -516,7 +516,7 @@
 
 ;; The reason it doesn't work without vars is that in this case the
 ;; Clojure compiler inlines the current values of `drums` and `hihats`
-;; immediately when it evaluates the `drums&hihats` pattern. If we use
+;; immediately when it evaluates the `drums+hihats` pattern. If we use
 ;; vars, then this "inlining" is postponed to the time when the
 ;; pattern gets built. And as `defp<` repeatedly rebuilds the pattern
 ;; after every iteration, changes in referenced var bindings are
