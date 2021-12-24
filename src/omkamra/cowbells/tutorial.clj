@@ -470,7 +470,7 @@
 ;; To ease experimentation with live loops, Cowbells provides the
 ;; following macros:
 
-(defp my-four-bar-loop
+(defp my-four-beat-loop
   [:bind {:channel 9}
    (repeat 4 [:note 36])])
 
@@ -478,7 +478,7 @@
 
 ;; If you want to loop the pattern, change the `defp` to `defp<`:
 
-(defp< my-four-bar-loop
+(defp< my-four-beat-loop
   [:bind {:channel 9}
    (repeat 4 [:note 36])])
 
