@@ -5,9 +5,6 @@
 (def default-sequencer
   (sequencer/create))
 
-(def non-binding-project-options
-  #{:sequencer :targets :target :bindings :bpm :snap})
-
 (defmacro defproject
   [project-name project-options]
   (assert (and (map? project-options)
@@ -32,8 +29,7 @@
                                        {}
                                        (or (:targets project-options)
                                            {default-alias (:target project-options)}))
-                  :bindings ~(merge (apply dissoc project-options non-binding-project-options)
-                                    (:bindings project-options))
+                  :bindings ~(:bindings project-options {})
                   :bpm ~(:bpm project-options 120)
                   :snap ~(:snap project-options 0)
                   :silent? (atom true)}))
