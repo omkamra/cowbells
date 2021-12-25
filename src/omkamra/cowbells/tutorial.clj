@@ -183,7 +183,7 @@
 ;; The reason for this behavior is that `:mix` does not advance the
 ;; *pattern offset*, even if its sub-expressions do (the pattern
 ;; offset determines the position/time of the next event which gets
-;; compiled into the pattern).
+;; written into the pattern).
 
 ;; To get around this issue, you can insert a `:wait` expression
 ;; between the two `:mix`es:
@@ -198,12 +198,6 @@
         [:note :e-5]
         [:note :g-5]
         [:note :b-5]]])
-
-;; As the `[:wait 1]` expression is compiled with the same pattern
-;; offset as the first `:mix`, the difference in time between the
-;; first and the second `:mix`es will be exactly 1 step (from this you
-;; maybe figured out that all what `:wait` does is to increase the
-;; pattern offset by the given amount).
 
 ;; Alternatively, you may use a `:mix1` expression - this works like
 ;; `:mix` but allows its first sub-expression (here `[:note :c-4]`) -
@@ -385,8 +379,9 @@
    [:program 52]
    [:degree -7]]])
 
-;; The `:program` expression sends a `program-change` MIDI message on
-;; the current channel.
+;; The `:program` expression writes an event into the pattern that
+;; sends a `program-change` MIDI message on the current channel at
+;; run-time.
 
 ;; With that many MIDI channels available, it is useful to configure
 ;; channel N with program N in a special pattern that is only used for
@@ -474,9 +469,9 @@
 ;; comment out that last function and re-evaluate.
 
 ;; To ease experimentation with live loops, Cowbells provides the
-;; following macros:
+;; following macros for every project defined via `defproject`:
 
-(defp my-four-beat-loop
+(defp my-drum-loop
   [:bind {:channel 9}
    (repeat 4 [:note 36])])
 
@@ -484,18 +479,19 @@
 
 ;; If you want to loop the pattern, change the `defp` to `defp<`:
 
-(defp< my-four-beat-loop
+(defp< my-drum-loop
   [:bind {:channel 9}
    (repeat 4 [:note 36])])
 
 ;; If you want to stop the looping, change `defp<` back to `defp` and
 ;; re-evaluate (it will stop when the current loop completes)
 
-;; Tip: If your pattern is very long, changing `defp<` to `defp` may
-;; not cut it (it takes too long to stop). In these cases, change the
-;; `defp<` to `defp-` first and evaluate - this invokes the `clear!`
-;; macro who removes all pending events from the sequencer timeline -
-;; and then finally change it back to `defp`.
+;; Tip: If your pattern is very long, you may have to a wait a lot
+;; after changing `defp<` to `defp` for the pattern to finish. In
+;; these cases, change the `defp<` to `defp-` first and evaluate -
+;; this invokes the `clear!` macro which removes all pending events
+;; from the sequencer timeline - and then finally change it back to
+;; `defp`.
 
 ;; These patterns can be combined into higher level units:
 
@@ -520,25 +516,20 @@
 (defp< drums+hihats
   [:mix1 drums hihats])
 
-;; The reason it doesn't work without vars is that in this case the
-;; Clojure compiler inlines the current values of `drums` and `hihats`
-;; immediately when it evaluates the `drums+hihats` pattern. If we use
-;; vars, then this "inlining" is postponed to the time when the
-;; pattern gets built. And as `defp<` repeatedly rebuilds the pattern
-;; after every iteration, changes in referenced var bindings are
-;; automatically picked up.
+;; The reason the live update doesn't work without vars is that in
+;; this case the Clojure compiler inlines the current values of
+;; `drums` and `hihats` immediately as it evaluates the `drums+hihats`
+;; pattern. If we use vars, then this "inlining" is postponed to the
+;; time when the pattern gets built. And as `defp<` repeatedly
+;; rebuilds the pattern after every iteration, changes in referenced
+;; var bindings are automatically picked up.
 
 ;; Note that the pattern form `#'v` is shorthand for the pattern
 ;; expression `[:var #'v]`. This pattern expression has another nice
 ;; feature: if the resolved var happens to be a function (but not a
 ;; pattern transformer function), the compiler applies this function
-;; to any extra arguments inside the `:var` form (following the var
-;; reference) and compiles the resulting value into a pattern
-;; transformer.
-
-;; This feature can be used to implement parameterized pattern
-;; generators which can be also updated dynamically while they are
-;; used by other patterns:
+;; to any extra arguments inside the `:var` form and compiles the
+;; resulting value into a pattern transformer:
 
 (defn generate-arp
   [start-degree notes]
@@ -558,7 +549,7 @@
 
 ;; -[ SNAPPING TO THE GRID]-------------------------------------------
 
-;; Let's return to our little drums+hihats pattern again: start the
+;; Let's return to our little drums+hihats pattern: start the
 ;; following loop and then continue reading.
 
 (defp< drums+hihats
@@ -588,8 +579,8 @@
 ;; i.e. at the beginning of the 4-beat loop defined by `drums+hihats`.
 
 ;; Sometimes this is perfectly ok (we want to play freely, not
-;; constrained by any formal structure), but other times we want to
-;; ensure that a pattern starts exactly at a given beat.
+;; constrained by any formal structure), but other times we would like
+;; to ensure that a pattern starts exactly at a given beat.
 
 ;; This is made possible by the concept of "snapping".
 
@@ -597,16 +588,16 @@
 ;; gets merged onto the sequencer's timeline when you play it.
 
 ;; The snap value is initially zero, this means the merging happens
-;; without any adjustments. But if you set the snap value to some
+;; without any adjustment. But if you set the snap value to some
 ;; non-zero, positive number (expressed in beats), then when that
 ;; pattern gets merged onto the timeline, its starting offset will be
 ;; adjusted (increased) if necessary to ensure it is divisible by the
-;; value of snap converted into ticks (that is the unit used by the
-;; sequencer deep down in the guts of the system).
+;; value of snap converted into ticks (the unit used by the sequencer
+;; deep down in the guts of the system).
 
 ;; TL;DR: If you want to ensure that two patterns always line up with
 ;; each other, set their snap value to the same number (preferably the
-;; length of the longer one but this is not a requirement).
+;; length of either one but this is not a requirement).
 
 ;; The way to do this is to use a `:snap` expression somewhere inside
 ;; the pattern:
@@ -632,17 +623,17 @@
 
 ;; -[ THE TRANSCRIPTION LANGUAGE ]------------------------------------
 
-;; Having read through all of the stuff I have shown so far, you may
-;; get the impression that this is a pretty cool toy, for programmers.
-;; But if your goal is to transcribe musical notation - that is, sheet
-;; music - into the computer, encoding it into these pattern forms
-;; would be (a) a Herculean task and (b) quite painful.
+;; Having read through all of this stuff, you may get the impression
+;; that this is a pretty cool toy, for programmers. But if your goal
+;; is to transcribe musical notation - that is, sheet music - into the
+;; computer, encoding it into these pattern forms would be quite
+;; painful.
 
-;; As I personally came to this conclusion, I developed another way to
-;; describe these pattern forms and pattern expressions. It is not a
-;; new language, just a layer on top of what you have already seen, a
-;; layer in which the pattern forms and expressions are written in the
-;; form of strings.
+;; As I personally came to the same conclusion, I developed another
+;; way to describe these pattern forms and pattern expressions. It is
+;; not a new language, just a layer on top of what you have already
+;; seen, a layer in which the pattern forms and expressions are
+;; written in the form of strings.
 
 ;; Examples:
 
@@ -695,9 +686,9 @@
 
 ;; Note that `./2` is translated to "multiply the current value
 ;; of :step by 1/2", instead of simply setting it to the absolute
-;; value 2. The fact that this is relative becomes very useful when we
-;; want to speed up or slow down entire parts of a piece by
-;; manipulating the `:step` value of the outermost bind.
+;; value 2. The fact that this is relative becomes useful when we want
+;; to speed up or slow down entire parts of a piece by manipulating
+;; the `:step` value of the outermost bind.
 
 ;; The `:mix` pattern does not have a string representation as I did
 ;; not find any use for it.
