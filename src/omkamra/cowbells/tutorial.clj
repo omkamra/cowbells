@@ -518,7 +518,7 @@
 
 ;; The reason the live update doesn't work without vars is that in
 ;; this case the Clojure compiler inlines the current values of
-;; `drums` and `hihats` immediately as it evaluates the `drums+hihats`
+;; `drums` and `hihats` immediately as it compiles the `drums+hihats`
 ;; pattern. If we use vars, then this "inlining" is postponed to the
 ;; time when the pattern gets built. And as `defp<` repeatedly
 ;; rebuilds the pattern after every iteration, changes in referenced
