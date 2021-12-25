@@ -774,6 +774,17 @@
 ;; scale (major) and then play degrees 0 and 2 of the major scale
 ;; starting there.
 
+;; Note that the string representations of patterns can be freely
+;; intermixed with data structure representations:
+
+(play
+ [:bind {:scale :major}
+  "0 2 4"]
+ [:bind {:scale :minor}
+  "(0 2 4)./2"])
+
+;; Use the one which is more appropriate for the task at hand.
+
 ;; -[ CLOSING WORDS ]-------------------------------------------------
 
 ;; Hopefully this will make someone happy.
