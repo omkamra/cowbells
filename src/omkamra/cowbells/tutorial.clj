@@ -469,7 +469,7 @@
 ;; comment out that last function and re-evaluate.
 
 ;; To ease experimentation with live loops, Cowbells provides the
-;; following macros for every project defined via `defproject`:
+;; following macros:
 
 (defp my-drum-loop
   [:bind {:channel 9}
