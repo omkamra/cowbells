@@ -1,4 +1,4 @@
-# omkamra.cowbells
+# Cowbells
 
 [![Clojars Project](https://img.shields.io/clojars/v/com.github.omkamra/cowbells.svg)](https://clojars.org/com.github.omkamra/cowbells)
 
