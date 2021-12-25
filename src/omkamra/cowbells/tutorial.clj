@@ -505,7 +505,7 @@
    (repeat 4 [:seq (repeat 2 [:note 42]) [:note 46]])
    (repeat 4 [:note 42])])
 
-(defp drums+hihats
+(defp< drums+hihats
   [:mix1 #'drums #'hihats])
 
 ;; Note that we refer to the `drums` and `hihats` patterns via var
