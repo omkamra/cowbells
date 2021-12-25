@@ -21,6 +21,12 @@
 ;; 4. Clojure REPL with all project.clj dependencies on its classpath
 ;; 5. A working sound card
 
+;; Debian/Ubuntu:
+;;   apt-get install fluidsynth fluid-soundfont-gm
+
+;; Arch Linux:
+;;   pacman -S fluidsynth soundfont-fluid
+
 ;; If you cannot find FluidR3_GM.sf2 in the package repository of your
 ;; Linux distribution, a copy can be downloaded from
 ;; https://musical-artifacts.com/artifacts/738/FluidR3_GM.sf2
