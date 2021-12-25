@@ -4,7 +4,18 @@
 
 A Clojure library for musical experimentation and live coding.
 
-Currently on Linux only (but you may be able to make it work on your platform).
+Currently Linux only (but you may be able to make it work on your platform).
+
+Feature highlights:
+
+- drives an in-process FluidSynth instance through the C API bound into the JVM via [JNR-FFI](https://github.com/omkamra/jnr)
+- notes can be represented by keywords (`:c-3`), MIDI note values or scale degrees
+- supports any kind of scale (just give it the list of intervals)
+- musical phrases can be encoded with either Clojure data structures or an equivalent text-based syntax
+- musical phrases can be bound to variables for reuse in other phrases
+- supports scoped change of scale, mode, root note, octave, semitone offset, MIDI channel, velocity, note step and duration
+- supports live looping (in the sense of Extempore or Sonic Pi)
+- the sequencer is pretty generic, it could be used to control anything, not just musical devices (e.g. it would be possible to play music and control an OpenGL visualizer via OSC simultaneously from the same patterns)
 
 If you are interested, read the [tutorial](https://github.com/omkamra/cowbells/blob/master/src/omkamra/cowbells/tutorial.clj).
 
