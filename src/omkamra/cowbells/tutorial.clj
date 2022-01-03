@@ -686,9 +686,9 @@
 
 ;; Note that `./2` is translated to "multiply the current value
 ;; of :step by 1/2", instead of simply setting it to the absolute
-;; value 2. The fact that this is relative becomes useful when we want
-;; to speed up or slow down entire parts of a piece by manipulating
-;; the `:step` value of the outermost bind.
+;; value 1/2. The fact that this is relative becomes useful when we
+;; want to speed up or slow down entire parts of a piece by
+;; manipulating the `:step` value of the outermost bind.
 
 ;; The `:mix` pattern does not have a string representation as I did
 ;; not find any use for it.
