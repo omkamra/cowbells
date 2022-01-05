@@ -650,20 +650,26 @@
    [:degree 2]
    [:degree 4]]])
 
-(play "{c85 ~16 v60 p85 -7 -14}")
+(play "(c85 ~16 v60 p85 {-7 -14})")
 ;; =
 (play
  [:bind {:channel 85
          :dur 16
          :vel 60}
-  [:program 85]
-  [:mix1
-   [:degree -7]
-   [:degree -14]]])
+  [:seq
+   [:program 85]
+   [:mix1
+    [:degree -7]
+    [:degree -14]]]])
+
+;; `(...)` translates to `:seq`
+;; `{...}` translates to `:mix1`
 
 ;; The binding modifiers - c85, ~16, etc. - can be placed anywhere
-;; inside the {...} brackets. The compiler collects them and puts them
+;; inside the parens/braces. The compiler collects them and puts them
 ;; into the bind map of the enclosing :bind expression.
+
+;; Parens around the top-level `:seq` may be omitted.
 
 (play "{(c1 p1 ./2 m60 m65 m48) (c5 p5 .2/3 m48 m60 m65)}")
 ;; =
@@ -681,8 +687,6 @@
    [:note 48]
    [:note 60]
    [:note 65]]])
-
-;; `(...)` translates to a `:seq` expression (which may be optimized away)
 
 ;; Note that `./2` is translated to "multiply the current value
 ;; of :step by 1/2", instead of simply setting it to the absolute
