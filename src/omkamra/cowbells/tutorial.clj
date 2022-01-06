@@ -67,24 +67,6 @@
 ;; each of them will get the same target object. (Targets are cached
 ;; and the target descriptor is used as the cache key.)
 
-;; A project may define any number of targets:
-
-;; (cowbells/defproject multi-target-project
-;;   {:targets
-;;    {::default
-;;     [:fluidsynth "/usr/share/soundfonts/FluidR3_GM.sf2"]
-;;     ::fantasia
-;;     [:fluidsynth "/usr/share/soundfonts/FantaGM 32 1.0.sf2"]}})
-
-;; These targets can be referenced later by their aliases (here
-;; `::default` or `::fantasia`).
-
-;; A target alias must be a keyword qualified with the project
-;; namespace.
-
-;; A single target given as the value of the `:target` key will get
-;; the alias `::default`.
-
 ;; Note that every Cowbells project needs a dedicated namespace. The
 ;; reason for this is that `defproject` generates a couple of
 ;; project-specific macros (like `play` or `stop`) and these macros
@@ -413,6 +395,81 @@
 ;; possible way to manage this is to keep a REPL window open by the
 ;; side that is bound to the project namespace and when things go
 ;; sour, just evaluate `(stop)` there.
+
+;; -[ MIDI CONTROLLERS ]----------------------------------------------
+
+;; Pitch bend:
+
+(defn pitch-bend
+  [dur start end steps]
+  (let [distance (- end start)
+        increment (/ distance steps)]
+    (for [i (range steps)]
+      [:seq
+       [:pitch-bend (+ start (* increment i))]
+       [:wait (/ dur steps)]])))
+
+;; the value passed to `:pitch-bend` is a number between 0 and 16383
+;; with 8192 being the middle (= no pitch bend)
+`
+(play
+ [:mix
+  [:bind {:channel 52
+          :dur 8
+          :oct -2
+          :vel 100}
+   [:program 52]
+   [:mix1
+    [:degree 0]
+    [:seq
+     (pitch-bend 4 8192 0 16)
+     (pitch-bend 4 0 16363 16)]]]
+  [:bind {:channel 95
+          :dur 10
+          :oct 1
+          :vel 50}
+   [:program 95]
+   [:mix1
+    [:degree 7]
+    [:seq
+     (pitch-bend 7 8192 0 16)
+     (pitch-bend 3 0 16363 16)]]]]
+ [:wait 12]
+ [:bind {:channel 52} [:pitch-bend 8192]]
+ [:bind {:channel 95} [:pitch-bend 8192]])
+
+;; You can set the value of any MIDI controller via `:cc`:
+
+(play
+ [:bind {:channel 90
+         :dur 24}
+  [:program 90]
+  [:cc 7 0]
+  [:mix1
+   [:mix1
+    [:degree -3]
+    [:degree -7]
+    [:degree -10]]
+   (for [i (range 16)]
+     [:seq
+      [:cc 7 (* i 8)]
+      [:wait 1]])]])
+
+;; Here we set CC number 7 (channel volume) to zero and then increase
+;; it by eight every beat while the chord is playing
+
+;; You can find a list of available FluidSynth MIDI controllers at
+;; https://github.com/FluidSynth/fluidsynth/wiki/FluidFeatures
+
+;; Some of them have aliases:
+
+;; [:bank <value>]      => [:cc 0 <value>]
+;; [:mod-wheel <value>] => [:cc 1 <value>]
+;; [:volume <value>]    => [:cc 7 <value>]
+;; [:balance <value>]   => [:cc 8 <value>]
+;; [:pan <value>]       => [:cc 10 <value>]
+;; [:all-sounds-off]    => [:cc 120 0]
+;; [:all-notes-off]     => [:cc 123 0]
 
 ;; -[ FUNCTIONS, VARS, LIVE LOOPS ]-----------------------------------
 

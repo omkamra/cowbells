@@ -1,5 +1,18 @@
 # Change Log
 
+## [0.3.0] - 2022-01-06
+
+### Added
+
+- new pattern expressions: `[:bank N]` to change MIDI bank, `[:cc C
+  V]` to change value of MIDI controller, `[:pitch-bend V]` for
+  setting pitch bend - see the new "MIDI CONTROLLERS" section of the
+  tutorial for more
+
+### Fixed
+
+- a bug in the sequencer which occasionally resulted in 100% CPU usage
+
 ## [0.2.0] - 2021-12-24
 
 ### Added
@@ -31,5 +44,6 @@
 
 Initial release.
 
+[0.3.0]: https://github.com/omkamra/cowbells/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/omkamra/cowbells/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/omkamra/cowbells/tree/0.1.0
