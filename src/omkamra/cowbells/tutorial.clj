@@ -461,7 +461,7 @@
 ;; You can find a list of available FluidSynth MIDI controllers at
 ;; https://github.com/FluidSynth/fluidsynth/wiki/FluidFeatures
 
-;; Some of them have aliases:
+;; Some of them have their own pattern expressions:
 
 ;; [:bank <value>]      => [:cc 0 <value>]
 ;; [:mod-wheel <value>] => [:cc 1 <value>]
