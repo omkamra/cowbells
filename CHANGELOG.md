@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3.1] - 2022-01-09
+
+### Fixed
+
+- a regression in the sequencer which made the timing of ticks less
+  precise
+
 ## [0.3.0] - 2022-01-06
 
 ### Added
@@ -44,6 +51,7 @@
 
 Initial release.
 
+[0.3.1]: https://github.com/omkamra/cowbells/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/omkamra/cowbells/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/omkamra/cowbells/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/omkamra/cowbells/tree/0.1.0
