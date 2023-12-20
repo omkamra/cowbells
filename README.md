@@ -17,11 +17,14 @@ Feature highlights:
 - supports live looping (in the sense of Extempore or Sonic Pi)
 - the sequencer is pretty generic, it could be used to control anything, not just musical devices (e.g. it would be possible to play music and control an OpenGL visualizer via OSC simultaneously from the same patterns)
 
-If you are interested, read the [tutorial](https://github.com/omkamra/cowbells/blob/master/src/omkamra/cowbells/tutorial.clj).
+Resources:
+
+- [Tutorial](https://github.com/omkamra/cowbells/blob/master/src/omkamra/cowbells/tutorial.clj)
+- [Reference for the music description language](https://github.com/omkamra/sequencer-midi#music-description-language)
 
 ## License
 
-Copyright © 2021 Balázs Ruzsa
+Copyright © 2021-2023 Balázs Ruzsa
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
